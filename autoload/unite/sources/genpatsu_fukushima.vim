@@ -15,9 +15,12 @@ function! s:get_news()
   let res = http#get("http://www3.nhk.or.jp/news/genpatsu-fukushima/")
   let dom = html#parse(iconv(res.content, 'utf-8', &encoding))
   for section in dom.findAll('div', {'class': 'section'})
-    let title = section.find('h2').value()
-    let body = substitute(section.find('p').value(), '<br[^>]*>', '\n', 'g')
-    call add(s:genpatsu_fukushima, [title, body])
+    let node = section.find('h2')
+    if has_key(node, 'value')
+      let title = node.value()
+      let body = substitute(section.find('p').value(), '<br[^>]*>', '\n', 'g')
+      call add(s:genpatsu_fukushima, [title, body])
+    endif
   endfor
 endfunction
 
