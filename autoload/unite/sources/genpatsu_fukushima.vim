@@ -1,11 +1,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
+scriptencoding utf-8
 
 let s:source_genpatsu_fukushima = { 'name': 'genpatsu_fukushima' }
 let s:genpatsu_fukushima = []
 
 function! unite#sources#genpatsu_fukushima#show(entry)
-  echo "Åy".a:entry[0]."Åz"
+  echo "„Äê".a:entry[0]."„Äë"
   echo "\n"
   echo a:entry[1]
 endfunction
