@@ -19,7 +19,10 @@ function! s:get_news()
     let node = section.find('h2')
     if has_key(node, 'value')
       let title = node.value()
-      let body = substitute(section.find('p').value(), '<br[^>]*>', '\n', 'g')
+      let body = section.find('p').value()
+      " remove <br //> <img //>
+      let body = substitute(body, '<img[^>]*>', '[画像]', 'g')
+      let body = substitute(body, '<br\s*/\+>', '\n', 'g')
       call add(s:genpatsu_fukushima, [no, title, body])
 	  let no += 1
     endif
