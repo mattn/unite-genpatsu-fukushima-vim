@@ -5,21 +5,23 @@ scriptencoding utf-8
 let s:source_genpatsu_fukushima = { 'name': 'genpatsu_fukushima' }
 let s:genpatsu_fukushima = []
 
-function! unite#sources#genpatsu_fukushima#show(entry)
-  echo "【".a:entry[0]."】"
+function! unite#sources#genpatsu_fukushima#show(no)
+  echo "【".s:genpatsu_fukushima[a:no][1]."】"
   echo "\n"
-  echo a:entry[1]
+  echo s:genpatsu_fukushima[a:no][2]
 endfunction
 
 function! s:get_news()
   let res = http#get("http://www3.nhk.or.jp/news/genpatsu-fukushima/")
   let dom = html#parse(iconv(res.content, 'utf-8', &encoding))
+  let no = 0
   for section in dom.findAll('div', {'class': 'section'})
     let node = section.find('h2')
     if has_key(node, 'value')
       let title = node.value()
       let body = substitute(section.find('p').value(), '<br[^>]*>', '\n', 'g')
-      call add(s:genpatsu_fukushima, [title, body])
+      call add(s:genpatsu_fukushima, [no, title, body])
+	  let no += 1
     endif
   endfor
 endfunction
@@ -27,10 +29,10 @@ endfunction
 function! s:source_genpatsu_fukushima.gather_candidates(args, context)
   call s:get_news()
   return map(copy(s:genpatsu_fukushima), '{
-        \ "word": v:val[0],
+        \ "word": v:val[1],
         \ "source": "genpatsu_fukushima",
         \ "kind": "command",
-        \ "action__command": "call unite#sources#genpatsu_fukushima#show(".string(v:val).")"
+        \ "action__command": "call unite#sources#genpatsu_fukushima#show(".v:val[0].")"
         \ }')
 endfunction
 
