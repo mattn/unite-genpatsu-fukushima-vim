@@ -12,8 +12,8 @@ function! unite#sources#genpatsu_fukushima#show(no)
 endfunction
 
 function! s:get_news()
-  let res = http#get("http://www3.nhk.or.jp/news/genpatsu-fukushima/")
-  let dom = html#parse(iconv(res.content, 'utf-8', &encoding))
+  let res = webapi#http#get("http://www3.nhk.or.jp/news/genpatsu-fukushima/")
+  let dom = webapi#html#parse(iconv(res.content, 'utf-8', &encoding))
   let no = 0
   for section in dom.findAll('div', {'class': 'section'})
     let node = section.find('h2')
